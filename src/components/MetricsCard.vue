@@ -171,7 +171,7 @@
   import moment from 'moment';
 export default {
   data: () => ({
-    postTwitter: "Post Twitter",
+    postTwitter: "Post Twitter ",
     altmetric: "Metricas  en sitio Altmetrics",
     last_updated:'',
     urlIcons:"https://www.google.com/imgres?imgurl=https%3A%2F%2Flookaside.fbsbx.com%2Flookaside%2Fcrawler%2Fmedia%2F%3Fmedia_id%3D100039870145061&imgrefurl=https%3A%2F%2Fwww.facebook.com%2FAltmetric%2F&tbnid=31_1Zr_j_5lrQM&vet=12ahUKEwjfwZ3kma77AhXixykDHbdJDywQMygFegUIARCxAQ..i&docid=GXIMgSLJ_rjIgM&w=625&h=625&q=almetrics%20icons&ved=2ahUKEwjfwZ3kma77AhXixykDHbdJDywQMygFegUIARCxAQ",
