@@ -1,129 +1,108 @@
-<!-- <template>
-  <div>
-    <header class="header">
-      <h1 class="header-title"><a href="/">Vue InstantSearch v2 starter</a></h1>
-      <p class="header-subtitle">
-        using
-        <a href="https://github.com/algolia/vue-instantsearch">
-          Vue InstantSearch
-        </a>
-      </p>
-    </header>
+<template>
+  <v-card class="mx-auto mt-1">
+    <v-system-bar></v-system-bar>
+    <v-toolbar flat color="transparent">
+        <v-btn icon type="button" v-on:click="doSearch()">
+        <v-icon>mdi-arrow-left</v-icon>
+      </v-btn>
+      <v-text-field
+        v-model="q"
+        type="text"
+        append-icon="mdi-magnify"
+        label="buscador website"
+        single-line
+      ></v-text-field>
 
-    <div class="container">
-      <ais-instant-search
-        :search-client="searchClient"
-        index-name="demo_ecommerce"
-      >
-        <div class="search-panel">
-          <div class="search-panel__filters">
-            <ais-refinement-list attribute="categories" searchable />
-          </div>
-
-          <div class="search-panel__results">
-            <ais-search-box placeholder="Search here…" class="searchbox" />
-            <ais-hits>
-              <template slot="item" slot-scope="{ item }">
-                <h1><ais-highlight :hit="item" attribute="name" /></h1>
-                <p><ais-highlight :hit="item" attribute="description" /></p>
-              </template>
-            </ais-hits>
-
-            <div class="pagination"><ais-pagination /></div>
-          </div>
-        </div>
-      </ais-instant-search>
-    </div>
+    </v-toolbar>
+    <v-card-text class="py-0">
+        <MetricsCard v-bind:post="searchResult"></MetricsCard>
+    </v-card-text>
+   <div class="text-center">
+    <v-pagination
+      v-model="page"
+      :length="4"
+      circle
+      v-show="visiblePagination"
+    ></v-pagination>
   </div>
+  </v-card>
 </template>
 
 <script>
-import algoliasearch from 'algoliasearch/lite';
-import 'instantsearch.css/themes/algolia-min.css';
-
+import axios from "axios";
+import _ from 'lodash';
+import MetricsCard from "../components/MetricsCard.vue";
 export default {
-  data() {
-    return {
-      searchClient: algoliasearch(
-        'B1G2GM9NG0',
-        'aadef574be1f9252bb48d4ea09b5cfe5'
-      ),
-    };
+  components: {
+    MetricsCard,
+  },
+  data: (vm) => ({
+    q: "",
+    searchResult: "",
+    page: 1,
+    start:1,
+    pageBefore:1,
+    visiblePagination: false,
+    key:"AIzaSyD8xMPy8gXY1OPi_9Hiwl1Kv76sirXNnhs",
+    //doi:'',
+    //cx:"3493648eba43943a2",
+    //api:"https://www.googleapis.com/customsearch/v1"
+    api: "https://api.altmetric.com/v1/doi/"
+  }),
+  watch: {
+    q: function () {
+      console.log(this.q);
+      this.visiblePagination = true;
+      this.debouncedDoSearch();
+      if(this.q.length==0){
+        this.searchResult = "";
+        this.visiblePagination = false;
+        this.page = 1;
+        this.pageBefore = 1;
+      }
+    },
+    page: function () {
+      if(this.pageBefore < this.page){
+        this.start = this.start + 10; 
+        this.pageBefore = this.page;
+      }else{
+        this.start = this.start - 10; 
+        this.pageBefore = this.page;
+      }  
+      console.log("valor de start",this.start);
+      this.doSearch();
+    }
+  },
+  created: function () {
+    // _.debounce is a function provided by lodash to limit how
+    // often a particularly expensive operation can be run.
+    // In this case, we want to limit how often we access
+    // yesno.wtf/api, waiting until the user has completely
+    // finished typing before making the ajax request. To learn
+    // more about the _.debounce function (and its cousin
+    // _.throttle), visit: https://lodash.com/docs#debounce
+    this.debouncedDoSearch = _.debounce(this.doSearch, 5000);
+  },
+  methods: {
+    doSearch: async function () {
+      try {
+        var app = this;
+        await axios
+        .get(
+          //`${this.api}?key=${this.key}&cx=${this.cx}&start=${this.start}&q=${this.q}`
+          `${this.api}${this.q}`
+        )
+        .then( (response)=> {
+          app.searchResult = response.data;
+
+          console.log("Resultado: " ,app.searchResult);
+        })
+      } catch (error) {
+        console.log(error.message);
+      }
+      
+        
+    },
   },
 };
 </script>
-
-<style>
-body,
-h1 {
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
-    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
-}
-
-.ais-Highlight-highlighted {
-  background: cyan;
-  font-style: normal;
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  min-height: 50px;
-  padding: 0.5rem 1rem;
-  background-image: linear-gradient(to right, #4dba87, #2f9088);
-  color: #fff;
-  margin-bottom: 1rem;
-}
-
-.header a {
-  color: #fff;
-  text-decoration: none;
-}
-
-.header-title {
-  font-size: 1.2rem;
-  font-weight: normal;
-}
-
-.header-title::after {
-  content: ' ▸ ';
-  padding: 0 0.5rem;
-}
-
-.header-subtitle {
-  font-size: 1.2rem;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 1rem;
-}
-
-.search-panel {
-  display: flex;
-}
-
-.search-panel__filters {
-  flex: 1;
-  margin-right: 1em;
-}
-
-.search-panel__results {
-  flex: 3;
-}
-
-.searchbox {
-  margin-bottom: 2rem;
-}
-
-.pagination {
-  margin: 2rem auto;
-  text-align: center;
-}
-</style> -->
