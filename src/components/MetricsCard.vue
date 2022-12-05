@@ -15,7 +15,7 @@
   <v-container fluid>
     <v-card-text class="py-2">
       <!-- <a href=""> -->
-      <v-list-item ripple @click="() => {}" :href="post.url">
+      <v-list-item ripple @click="() => {}" :href="post.url" v-if="post.hasOwnProperty('url')">
         <v-img
           :src="post.images.small"
           class="mr-4"
@@ -56,17 +56,17 @@
       </v-list-item>
     </v-card-text>
     <v-row dense>
-      <v-col cols="2">
+      <v-col cols="2" v-show="post.hasOwnProperty('authors')">
         <v-card max-width="300">
           <v-list-item two-line>
             <v-list-item-title class="text-h5"> Autores </v-list-item-title>
           </v-list-item>
           <v-card-text>
             <v-row>
-              <v-col class="text-h2" cols="5"> {{ post.authors.length }} </v-col>
+              <v-col class="text-h2" cols="5" v-if="post.hasOwnProperty('authors')"> {{ post.authors.length }} </v-col>
               <v-col cols="5">
                 <v-img
-                  src="https://cdn.icon-icons.com/icons2/122/PNG/512/twitter_socialnetwork_20007.png"
+                  src="https://cdn.icon-icons.com/icons2/2358/PNG/512/fabrication_fake_news_author_unethical_icon_143313.png"
                   alt="Sunny image"
                   width="92"
                 ></v-img>
@@ -121,17 +121,17 @@
         </v-card>
       </v-col>
 
-      <v-col cols="2">
+      <v-col cols="2" >
         <v-card max-width="300">
           <v-list-item two-line>
-            <v-list-item-title class="text-h5"> Lectores en Mendeley </v-list-item-title>
+            <v-list-item-title class="text-h5" > Lectores en Mendeley </v-list-item-title>
           </v-list-item>
           <v-card-text>
             <v-row>
               <v-col class="text-h4" cols="5"> {{ post.readers.mendeley }} </v-col>
               <v-col cols="5">
                 <v-img
-                  src="https://cdn.icon-icons.com/icons2/122/PNG/512/twitter_socialnetwork_20007.png"
+                  src="https://cdn.icon-icons.com/icons2/1381/PNG/512/mendeleydesktop_93629.png"
                   alt="Sunny image"
                   width="92"
                 ></v-img>
@@ -153,7 +153,7 @@
               <v-col class="text-h5" cols="5"> {{ post.type }} </v-col>
               <v-col cols="5">
                 <v-img
-                  src="https://cdn.icon-icons.com/icons2/122/PNG/512/twitter_socialnetwork_20007.png"
+                  src="https://cdn.icon-icons.com/icons2/34/PNG/256/documentediting_editdocuments_text_documentedi_2820.png"
                   alt="Sunny image"
                   width="92"
                 ></v-img>
@@ -174,7 +174,7 @@ export default {
     postTwitter: "Post Twitter ",
     altmetric: "Metricas  en sitio Altmetrics",
     last_updated:'',
-    urlIcons:"https://www.google.com/imgres?imgurl=https%3A%2F%2Flookaside.fbsbx.com%2Flookaside%2Fcrawler%2Fmedia%2F%3Fmedia_id%3D100039870145061&imgrefurl=https%3A%2F%2Fwww.facebook.com%2FAltmetric%2F&tbnid=31_1Zr_j_5lrQM&vet=12ahUKEwjfwZ3kma77AhXixykDHbdJDywQMygFegUIARCxAQ..i&docid=GXIMgSLJ_rjIgM&w=625&h=625&q=almetrics%20icons&ved=2ahUKEwjfwZ3kma77AhXixykDHbdJDywQMygFegUIARCxAQ",
+    urlIcons:'https://cdn.icon-icons.com/icons2/1852/PNG/512/iconfinder-browserwindowwithstats-4417108_116626.png',
   }),
   props: ["post"],
   created: function () {
